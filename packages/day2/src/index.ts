@@ -36,12 +36,9 @@ const matches = input.split("\n").map((match) => match.split(" ")) as [
   keyof typeof opponentMoveValues,
   keyof typeof myMoveValues
 ][];
-const scores = matches.map((match) => {
-  const myMoveScore = myMoveValues[match[1]];
-  const outcomeScore = outcomeValues[match[0]][match[1]];
-  return myMoveScore + outcomeScore;
-});
-const totalScore = scores.reduce((total, score) => total + score, 0);
+const totalScore = matches
+  .map((match) => myMoveValues[match[1]] + outcomeValues[match[0]][match[1]])
+  .reduce((total, score) => total + score, 0);
 console.log(`Part 1 solution: ${totalScore}`);
 
 // part 2
@@ -53,29 +50,23 @@ const outComeValues2 = {
 
 const myMoveValues2 = {
   A: {
-    // rock
     X: 3,
     Y: 1,
     Z: 2,
   },
   B: {
-    // paper
     X: 1,
     Y: 2,
     Z: 3,
   },
   C: {
-    // scissors
     X: 2,
     Y: 3,
     Z: 1,
   },
 };
 
-const scores2 = matches.map((match) => {
-  const outcomeScore2 = outComeValues2[match[1]];
-  const myMoveScore2 = myMoveValues2[match[0]][match[1]];
-  return outcomeScore2 + myMoveScore2;
-});
-const totalScore2 = scores2.reduce((total, score) => total + score, 0);
+const totalScore2 = matches
+  .map((match) => outComeValues2[match[1]] + myMoveValues2[match[0]][match[1]])
+  .reduce((total, score) => total + score, 0);
 console.log(`Part 2 solution: ${totalScore2}`);
