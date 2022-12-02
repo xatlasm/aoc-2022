@@ -1,4 +1,4 @@
-import * as fs from "fs/promises";
+import * as fs from 'fs/promises';
 
 // part 1
 const opponentMoveValues = {
@@ -31,8 +31,8 @@ const outcomeValues = {
   },
 };
 
-const input = await fs.readFile("src/input.txt", { encoding: "utf8" });
-const matches = input.split("\n").map((match) => match.split(" ")) as [
+const input = await fs.readFile('src/input.txt', { encoding: 'utf8' });
+const matches = input.split('\n').map((match) => match.split(' ')) as [
   keyof typeof opponentMoveValues,
   keyof typeof myMoveValues
 ][];
