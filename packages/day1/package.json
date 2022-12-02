@@ -1,7 +1,6 @@
 {
   "name": "@aoc-2022/day1",
   "version": "1.0.0",
-  "description": "## Install",
   "main": "index.js",
   "type": "module",
   "scripts": {
