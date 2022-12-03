@@ -1,0 +1,22 @@
+{
+  "name": "@aoc-2022/utils",
+  "version": "1.0.0",
+  "main": "index.js",
+  "type": "module",
+  "devDependencies": {},
+  "scripts": {
+    "build": "rimraf ./dist && tsc",
+    "start": "tsx watch ./src/index.ts"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/xatlasm/aoc-2022.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/xatlasm/aoc-2022/issues"
+  },
+  "homepage": "https://github.com/xatlasm/aoc-2022#readme"
+}
