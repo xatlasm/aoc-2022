@@ -8,7 +8,7 @@ const vals = sacks
   .map((sack) => {
     const firstHalf = sack.slice(0, sack.length / 2).split('');
     const secondHalf = sack.slice(sack.length / 2).split('');
-    const intersection = firstHalf.filter((l) => secondHalf.includes(l));
+    const intersection = firstHalf.filter((char) => secondHalf.includes(char));
     return intersection[0] === intersection[0].toUpperCase()
       ? intersection[0].charCodeAt(0) - 38
       : intersection[0].charCodeAt(0) - 96;
@@ -27,8 +27,9 @@ const result = groups
     const intersection = firstSack
       .split('')
       .filter(
-        (l) =>
-          secondSack.split('').includes(l) && thirdSack.split('').includes(l)
+        (char) =>
+          secondSack.split('').includes(char) &&
+          thirdSack.split('').includes(char)
       );
     return intersection[0] === intersection[0].toUpperCase()
       ? intersection[0].charCodeAt(0) - 38
