@@ -2,15 +2,50 @@ import * as fs from 'fs/promises';
 
 // part 1
 const input = await fs.readFile('src/input.txt', { encoding: 'utf8' });
-const sums = input
-  .split('\n\n')
-  .map((group) => group.split('\n').reduce((sum, val) => sum + Number(val), 0));
-const maxSum = Math.max(...sums);
-console.log(`Part 1 solution: ${maxSum}`);
+
+// parse the columns
+const lines = input.split('\n');
+const rows = lines.splice(0, 10);
+
+// parse the moves
+// eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+const moves = lines.map((line) => line.match(/\d+/g)!.map((n) => Number(n)));
+
+// parse the columns
+const columns = rows
+  .reduce(
+    (newArr, row) => {
+      const splitRow = row.split('');
+
+      // pick out the letters in the boxes
+      for (let i = 1; i < splitRow.length; i += 4) {
+        newArr[(i - 1) / 4].push(splitRow[i]);
+      }
+      return newArr;
+    },
+    [...Array(9)].map(() => Array(1).fill(' ')) // TIL how to initialize a 2D array
+  )
+  .map((col) => col.slice(0, -1).filter((e) => e !== ' '));
+
+// make a clone just in case I'll need it later! 😉
+const crates = structuredClone(columns); // TIL structuredClone() since Node 17
+
+// perform the moves
+moves.forEach((move) => {
+  const [n, s, p] = move;
+  const removed = crates[s - 1].splice(0, n);
+  crates[p - 1].splice(0, 0, ...removed.reverse());
+});
+
+// get the top layer
+const sol1 = crates.map((c) => c[0]).join('');
+console.log(`Part 1 solution: ${sol1}`);
 
 // part 2
-const sortedSums = sums.sort((a, b) => b - a);
-const sumOfTopThreeSums = sortedSums
-  .slice(0, 3)
-  .reduce((res, sum) => res + sum, 0);
-console.log(`Part 2 solution: ${sumOfTopThreeSums}`);
+moves.forEach((move) => {
+  const [n, s, p] = move;
+  const removed = columns[s - 1].splice(0, n);
+  columns[p - 1].splice(0, 0, ...removed);
+});
+const sol2 = columns.map((c) => c[0]).join('');
+console.log(`Part 2 solution: ${sol2}`);
