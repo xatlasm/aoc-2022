@@ -1,6 +1,7 @@
 #!/usr/bin/env bash
 
 # creates new workspace when passed name param such as: day12
+# requires gsed installed if on Mac: brew install gnu-sed
 
 npm init -y --scope @aoc-2022 -w ./packages/"$1" # init the workspace
 cp -r ./packages/day1/. ./packages/"$1"          # copy the files from day1
