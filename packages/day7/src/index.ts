@@ -4,32 +4,76 @@ import * as fs from 'fs/promises';
 const input = await fs.readFile('src/input.txt', { encoding: 'utf8' });
 const lines = input.split('\n');
 
-const cdRe = /\$ cd (.+)/;
-const sizeRe = /(\d+)/;
+type Directory = {
+  name: string;
+  parent: Directory | null;
+  children: Directory[];
+  size: number;
+};
 
-const dirs: Record<string, number> = {};
-const path: string[] = [];
-lines.forEach((line) => {
-  if (line === '$ cd ..') path.pop();
-  else if (cdRe.exec(line)) path.push(cdRe.exec(line)?.[1] ?? '');
-  else if (sizeRe.exec(line)) {
-    dirs[path.join('/')] =
-      dirs[path.join('/')] ?? 0 + Number(sizeRe.exec(line)?.[1]);
+const root: Directory = {
+  name: '/',
+  parent: null,
+  children: [],
+  size: 0,
+};
+
+const flatList: Directory[] = [root];
+let currentDir = root;
+
+lines.slice(1).forEach((line) => {
+  if (line[0] === '$') {
+    // command
+    const [, cmd, arg] = line.split(' ');
+    if (cmd === 'cd') {
+      // don't care about ls itself
+      if (arg !== '..') {
+        currentDir =
+          currentDir.children.find((dir) => dir.name === arg) ?? currentDir; // go down
+      } else {
+        currentDir = currentDir.parent ?? currentDir; // go up
+      }
+    }
+  } else {
+    // ls result (file or directory)
+    const size = parseInt(line, 10);
+    if (size > 0) {
+      // file
+      currentDir.size += size; // add size. Don't have to do it for flatList because it's an object ref!
+      let parentDir = currentDir.parent;
+      while (parentDir) {
+        // recurse size up tree
+        parentDir.size += size;
+        parentDir = parentDir.parent;
+      }
+    } else {
+      // dir
+      const [, arg] = line.split(' ');
+      const newDir = {
+        name: arg,
+        parent: currentDir,
+        children: [],
+        size: 0,
+      };
+      flatList.push(newDir);
+      currentDir.children.push(newDir);
+    }
   }
 });
 
-console.log(dirs);
+const smallFolders = flatList.filter((item) => item.size <= 100_000);
+const smallFolderSizeSum = smallFolders.reduce(
+  (sum, item) => sum + item.size,
+  0
+);
 
-// part1
-const sol1 = Object.values(dirs)
-  .filter((size) => size <= 100000)
-  .reduce((sum, size) => sum + size, 0);
-console.log(sol1);
+console.log(`Part 1 solution: ${smallFolderSizeSum}`);
 
-// const commands = lines
-//   .map((line, index): [number, string[]] => [index, line.split(' ')])
-//   .filter((line) => line[1][0] === '$')
-//   .flatMap((cmd) => [
-//     { index: cmd[0], cmd: cmd[1].slice(1)[0], arg: cmd[1].slice(1)[1] },
-//   ]);
-// console.log(commands);
+// part 2
+const spaceToDelete = 30000000 - (70000000 - root.size);
+const minSize = Math.min(
+  ...flatList
+    .filter((item) => item.size >= spaceToDelete)
+    .map((item) => item.size)
+);
+console.log(`Part 2 solution: ${minSize}`);
