@@ -11,7 +11,7 @@ const transposedGrid = grid[0].map((_, colIndex) =>
 );
 
 const isVisible = (y: number, x: number): boolean => {
-  // edges
+  // edge cases
   if (x === 0 || x === grid[0].length - 1 || y === 0 || y === grid.length - 1)
     return true;
   const height = grid[y][x];
@@ -33,45 +33,23 @@ console.log(`Part 1 solution: ${visibleCount}`);
 
 // Part 2
 const sceneryScore = (y: number, x: number): number => {
-  // edges
+  // edge cases
   if (x === 0 || x === grid[0].length - 1 || y === 0 || y === grid.length - 1)
     return 0;
 
   const height = grid[y][x];
 
-  // right
-  const viewRight = grid[y].slice(x + 1).reduce((count, tree, i, arr) => {
-    if (tree >= height) arr.splice(1); // eject!
-    return count + 1;
-  }, 0);
-
-  // left
-  const viewLeft = grid[y]
-    .slice(0, x)
-    .reverse()
-    .reduce((count, tree, i, arr) => {
+  const calcDirScore = (arr: number[]) =>
+    arr.reduce((count, tree, i, arr) => {
       if (tree >= height) arr.splice(1); // eject!
       return count + 1;
     }, 0);
 
-  // down
-  const viewDown = transposedGrid[x]
-    .slice(y + 1)
-    .reduce((count, tree, i, arr) => {
-      if (tree >= height) arr.splice(1); //eject!
-      return count + 1;
-    }, 0);
-
-  // up
-  const viewup = transposedGrid[x]
-    .slice(0, y)
-    .reverse()
-    .reduce((count, tree, i, arr) => {
-      if (tree >= height) arr.splice(1); //eject!
-      return count + 1;
-    }, 0);
-
-  return viewRight * viewLeft * viewDown * viewup;
+  const rightScore = calcDirScore(grid[y].slice(x + 1));
+  const leftScore = calcDirScore(grid[y].slice(0, x).reverse());
+  const downScore = calcDirScore(transposedGrid[x].slice(y + 1));
+  const upScore = calcDirScore(transposedGrid[x].slice(0, y).reverse());
+  return rightScore * leftScore * downScore * upScore;
 };
 
 const maxScenery = Math.max(
