@@ -30,9 +30,11 @@ const diagMoves: DiagMoves = [
 
 const straightMap = ['[-2,0]', '[2,0]', '[0,2]', '[0,-2]'];
 
-// honestly, I don't fully understand why part 2 can have states where
-// neighboring nodes can be as far as [2, 2] apart, but not part 1, but
-// this is how it has to work for the code to not crash...
+// for part 2, have to add cases for when nodes are
+// [2, 2] away, because now it's possible for leading
+// node to move diagonally, but part 1 was restricted to
+// U, D, L, R
+
 const diagMap = [
   '[1,2]',
   '[2,1]',
