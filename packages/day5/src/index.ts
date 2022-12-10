@@ -39,7 +39,7 @@ moves.forEach((move) => {
 
 // get the top layer
 const sol1 = crates.map((c) => c[0]).join('');
-console.log(`Part 1 solution: ${sol1}`);
+console.log(`Part 1 solution: ${sol1}`); // GRTSWNJHH
 
 // part 2
 moves.forEach((move) => {
@@ -48,4 +48,4 @@ moves.forEach((move) => {
   columns[p - 1].splice(0, 0, ...removed);
 });
 const sol2 = columns.map((c) => c[0]).join('');
-console.log(`Part 2 solution: ${sol2}`);
+console.log(`Part 2 solution: ${sol2}`); // QLFQDBBHM

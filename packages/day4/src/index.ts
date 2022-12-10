@@ -28,7 +28,7 @@ const fullSum = fullOverlaps.reduce(
   0
 );
 
-console.log(`Part 1 solution: ${fullSum}`);
+console.log(`Part 1 solution: ${fullSum}`); // 528
 
 // part 2
 const partialOverlaps = destructuredPairs.map(
@@ -39,4 +39,4 @@ const partialSum = partialOverlaps.reduce(
   (sum: number, partial: number) => sum + partial,
   0
 );
-console.log(`Part 2 solution: ${partialSum}`);
+console.log(`Part 2 solution: ${partialSum}`); // 881

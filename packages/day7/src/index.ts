@@ -67,7 +67,7 @@ const smallFolderSizeSum = smallFolders.reduce(
   0
 );
 
-console.log(`Part 1 solution: ${smallFolderSizeSum}`);
+console.log(`Part 1 solution: ${smallFolderSizeSum}`); // 1908462
 
 // part 2
 const spaceToDelete = 30000000 - (70000000 - root.size);
@@ -76,4 +76,4 @@ const minSize = Math.min(
     .filter((item) => item.size >= spaceToDelete)
     .map((item) => item.size)
 );
-console.log(`Part 2 solution: ${minSize}`);
+console.log(`Part 2 solution: ${minSize}`); // 3979145

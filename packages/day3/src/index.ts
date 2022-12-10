@@ -14,7 +14,7 @@ const vals = sacks
       : intersection[0].charCodeAt(0) - 96;
   })
   .reduce((sum, val) => sum + val, 0);
-console.log(`Part 1 solution: ${vals}`);
+console.log(`Part 1 solution: ${vals}`); // 7997
 
 // part 2
 const groups = [];
@@ -36,4 +36,4 @@ const result = groups
       : intersection[0].charCodeAt(0) - 96;
   })
   .reduce((sum, val) => sum + val, 0);
-console.log(`Part 2 solution: ${result}`);
+console.log(`Part 2 solution: ${result}`); // 2545

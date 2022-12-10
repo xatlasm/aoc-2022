@@ -39,7 +39,7 @@ const matches = input.split('\n').map((match) => match.split(' ')) as [
 const totalScore = matches
   .map((match) => myMoveValues[match[1]] + outcomeValues[match[0]][match[1]])
   .reduce((total, score) => total + score, 0);
-console.log(`Part 1 solution: ${totalScore}`);
+console.log(`Part 1 solution: ${totalScore}`); // 12772
 
 // part 2
 const outComeValues2 = {
@@ -69,4 +69,4 @@ const myMoveValues2 = {
 const totalScore2 = matches
   .map((match) => outComeValues2[match[1]] + myMoveValues2[match[0]][match[1]])
   .reduce((total, score) => total + score, 0);
-console.log(`Part 2 solution: ${totalScore2}`);
+console.log(`Part 2 solution: ${totalScore2}`); // 11618

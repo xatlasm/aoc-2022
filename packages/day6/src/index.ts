@@ -11,5 +11,5 @@ const solution = (length: number) => {
   return -1;
 };
 
-console.log(`Part 1 solution: ${solution(4)}`);
-console.log(`Part 2 solution: ${solution(14)}`);
+console.log(`Part 1 solution: ${solution(4)}`); // 1578
+console.log(`Part 2 solution: ${solution(14)}`); // 2178

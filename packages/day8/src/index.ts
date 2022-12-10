@@ -29,7 +29,7 @@ const visibleCount = grid
   .map((row, j) => row.filter((tree, i) => isVisible(j, i)).length)
   .reduce((sum, count) => sum + count, 0);
 
-console.log(`Part 1 solution: ${visibleCount}`);
+console.log(`Part 1 solution: ${visibleCount}`); // 1733
 
 // Part 2
 const sceneryScore = (y: number, x: number): number => {
@@ -56,4 +56,4 @@ const maxScenery = Math.max(
   ...grid.flatMap((row, j) => row.map((tree, i) => sceneryScore(j, i)))
 );
 
-console.log(`Part 2 solution: ${maxScenery}`);
+console.log(`Part 2 solution: ${maxScenery}`); // 284648

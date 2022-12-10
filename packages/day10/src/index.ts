@@ -32,12 +32,11 @@ commands.forEach((command) => {
   }
   i++;
 });
-
-// 11720
 const solution1 = signalStrengths
   .filter((_, i) => (i + 21) % 40 === 0)
   .reduce((sum, value) => sum + value, 0);
-console.log(`Part 1 solution: ${solution1}`);
+
+console.log(`Part 1 solution: ${solution1}`); // 11720
 
 // part 2
 const render = cycleRegisterTuple

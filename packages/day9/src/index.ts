@@ -81,8 +81,8 @@ const moves = input.split('\n').flatMap((line) => {
 
 // part 1
 const nodes = createNodes(2);
-console.log(`Part 1 solution: ${simulate(nodes, moves)}`);
+console.log(`Part 1 solution: ${simulate(nodes, moves)}`); // 5513
 
 // part 2
 const nodes2 = createNodes(10);
-console.log(`Part 2 solution: ${simulate(nodes2, moves)}`);
+console.log(`Part 2 solution: ${simulate(nodes2, moves)}`); // 2427
