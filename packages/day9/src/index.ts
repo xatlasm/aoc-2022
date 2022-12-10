@@ -1,129 +1,88 @@
 import * as fs from 'fs/promises';
 
-type StraightMoves = {
-  [key in 'L' | 'R' | 'U' | 'D']: [-1 | 0 | 1, -1 | 0 | 1];
+type Move = [0 | 1 | -1, 0 | 1 | -1];
+type Position = [number, number];
+type Moves = Move[];
+type Positions = Position[];
+type StraightMovesMap = {
+  [key in 'L' | 'R' | 'U' | 'D']: Move;
 };
-
-type DiagMoves = [-1 | 1, -1 | 1][];
-
-const straightMoves: StraightMoves = {
+const straightMovesMap: StraightMovesMap = {
   L: [-1, 0],
   R: [1, 0],
   U: [0, 1],
   D: [0, -1],
 };
 
-const diagMoves: DiagMoves = [
-  [1, 1],
-  [1, 1],
-  [1, 1],
-  [-1, -1],
-  [-1, -1],
-  [-1, -1],
-  [-1, 1],
-  [-1, 1],
-  [-1, 1],
-  [1, -1],
-  [1, -1],
-  [1, -1],
+const moveMap: Record<string, Move> = {
+  '[-2,0]': [-1, 0],
+  '[2,0]': [1, 0],
+  '[0,2]': [0, 1],
+  '[0,-2]': [0, -1],
+  '[1,2]': [1, 1],
+  '[2,1]': [1, 1],
+  '[2,2]': [1, 1],
+  '[-2,-1]': [-1, -1],
+  '[-1,-2]': [-1, -1],
+  '[-2,-2]': [-1, -1],
+  '[-1,2]': [-1, 1],
+  '[-2,1]': [-1, 1],
+  '[-2,2]': [-1, 1],
+  '[2,-1]': [1, -1],
+  '[1,-2]': [1, -1],
+  '[2,-2]': [1, -1],
+};
+
+const createNodes = (length: number) => {
+  const result = [];
+  for (let i = 0; i < length; i++) {
+    result.push([0, 0] as Position);
+  }
+  return result;
+};
+
+const calcMove = (head: Position, tail: Position): Move => {
+  const diff = [head[0] - tail[0], head[1] - tail[1]];
+  if (Math.max(...diff.map((d) => Math.abs(d))) <= 1) return [0, 0];
+  const diffString = JSON.stringify(diff);
+  return moveMap[diffString];
+};
+
+const moveNode = (node: Position, move: Move): Position => [
+  node[0] + move[0],
+  node[1] + move[1],
 ];
 
-const straightMap = ['[-2,0]', '[2,0]', '[0,2]', '[0,-2]'];
+const simulate = (nodesArr: Positions, moves: Moves) => {
+  const nodes = [...nodesArr]; // protect initial array
+  const tailTrace = [nodesArr.slice(-1).flat()];
+  moves.forEach((move) => {
+    for (let i = 0; i < nodes.length; i++) {
+      nodes[i] =
+        i === 0
+          ? moveNode(nodes[0], move)
+          : moveNode(nodes[i], calcMove(nodes[i - 1], nodes[i]));
+    }
+    tailTrace.push(nodes.slice(-1).flat());
+  });
+  return new Set(tailTrace.map((p) => JSON.stringify(p))).size;
+};
 
-// for part 2, have to add cases for when nodes are
-// [2, 2] away, because now it's possible for leading
-// node to move diagonally, but part 1 was restricted to
-// U, D, L, R
-
-const diagMap = [
-  '[1,2]',
-  '[2,1]',
-  '[2,2]',
-  '[-2,-1]',
-  '[-1,-2]',
-  '[-2,-2]',
-  '[-1,2]',
-  '[-2,1]',
-  '[-2,2]',
-  '[2,-1]',
-  '[1,-2]',
-  '[2,-2]',
-];
-
+// process input
 const input = await fs.readFile('src/input.txt', { encoding: 'utf8' });
-const lines = input.split('\n');
-const moveSequence = lines.flatMap((line) => {
+const moves = input.split('\n').flatMap((line) => {
   const [direction, times] = line.split(' ');
   const result = [];
   for (let i = 0; i < Number(times); i++) {
-    result.push(straightMoves[direction as keyof StraightMoves]);
+    result.push(straightMovesMap[direction as keyof StraightMovesMap]);
   }
   return result;
 });
 
-type Position = [number, number];
-let h: Position = [0, 0];
-let t: Position = [0, 0];
-const positions: Position[] = [[0, 0]];
+// part 1
+const nodes = createNodes(2);
+console.log(`Part 1 solution: ${simulate(nodes, moves)}`);
 
-const calcDiff = (head: Position, tail: Position) => [
-  head[0] - tail[0],
-  head[1] - tail[1],
-];
-
-const calcMove = (head: Position, tail: Position) => {
-  const diff = calcDiff(head, tail);
-  if (Math.max(...diff.map((d) => Math.abs(d))) <= 1) return [0, 0];
-  if (straightMap.includes(JSON.stringify(diff)))
-    return Object.values(straightMoves)[
-      straightMap.findIndex((m) => m === JSON.stringify(diff))
-    ];
-  return Object.values(diagMoves)[
-    diagMap.findIndex((m) => m === JSON.stringify(diff))
-  ];
-};
-
-const moveNode = (
-  node: Position,
-  move: ReturnType<typeof calcMove>
-): Position => [node[0] + move[0], node[1] + move[1]];
-
-moveSequence.forEach((move) => {
-  h = moveNode(h, move);
-  t = moveNode(t, calcMove(h, t));
-  positions.push(t);
-});
-
-const result = new Set(positions.map((p) => JSON.stringify(p)));
-
-console.log(`Part 1 solution: ${result.size}`);
-
-let head: Position = [0, 0];
-let mid1: Position = [0, 0];
-let mid2: Position = [0, 0];
-let mid3: Position = [0, 0];
-let mid4: Position = [0, 0];
-let mid5: Position = [0, 0];
-let mid6: Position = [0, 0];
-let mid7: Position = [0, 0];
-let mid8: Position = [0, 0];
-let tail: Position = [0, 0];
-
-const positions2: Position[] = [[0, 0]];
-
-moveSequence.forEach((move) => {
-  head = moveNode(head, move);
-  mid1 = moveNode(mid1, calcMove(head, mid1));
-  mid2 = moveNode(mid2, calcMove(mid1, mid2));
-  mid3 = moveNode(mid3, calcMove(mid2, mid3));
-  mid4 = moveNode(mid4, calcMove(mid3, mid4));
-  mid5 = moveNode(mid5, calcMove(mid4, mid5));
-  mid6 = moveNode(mid6, calcMove(mid5, mid6));
-  mid7 = moveNode(mid7, calcMove(mid6, mid7));
-  mid8 = moveNode(mid8, calcMove(mid7, mid8));
-  tail = moveNode(tail, calcMove(mid8, tail));
-  positions2.push(tail);
-});
-
-const result2 = new Set(positions2.map((p) => JSON.stringify(p)));
-console.log(`Part 2 solution: ${result2.size}`);
+// part 2
+const nodes2 = createNodes(10);
+console.log(`Part 2 solution: ${simulate(nodes2, moves)}`);
